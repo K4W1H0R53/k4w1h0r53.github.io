@@ -1,0 +1,400 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="使用PicGo+CF(Cloudflare)+B2(Backblaze)作为博客图床"><meta name="keywords" content="博客搭设"><meta name="author" content="K4W1H0R53"><meta name="copyright" content="K4W1H0R53"><title>使用PicGo+CF(Cloudflare)+B2(Backblaze)作为博客图床 | 冬多鲁玛杂货铺</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '7.0.0'
+} </script><meta name="generator" content="Hexo 7.0.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E8%BD%AE%E5%AD%90"><span class="toc-number">3.</span> <span class="toc-text">所需要的轮子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B2-Backblaze"><span class="toc-number">4.</span> <span class="toc-text">为什么要用B2(Backblaze)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B2-Backblaze-%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">B2(Backblaze)配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E5%86%8C%E8%B4%A6%E5%8F%B7"><span class="toc-number">5.1.</span> <span class="toc-text">注册账号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BAbucket"><span class="toc-number">5.2.</span> <span class="toc-text">新建bucket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEbucket"><span class="toc-number">5.3.</span> <span class="toc-text">设置bucket</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%BC%93%E5%AD%98%E5%9B%9E%E6%BA%90%E6%97%B6%E9%97%B4"><span class="toc-number">5.3.1.</span> <span class="toc-text">设置缓存回源时间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E6%B4%BB%E6%97%B6%E9%97%B4%E8%AE%BE%E7%BD%AE-Lifecycle-Settings"><span class="toc-number">5.3.2.</span> <span class="toc-text">存活时间设置(Lifecycle Settings)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%A8%E5%9F%9F%E8%A7%84%E5%88%99%E8%AE%BE%E7%BD%AE-CORS-Rules"><span class="toc-number">5.3.3.</span> <span class="toc-text">跨域规则设置(CORS Rules)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B2-API%E9%85%8D%E7%BD%AE"><span class="toc-number">5.4.</span> <span class="toc-text">B2 API配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B0%E5%BB%BAAPI%E5%AF%86%E9%92%A5"><span class="toc-number">5.4.1.</span> <span class="toc-text">新建API密钥</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96API%E7%9A%84keyID%E5%8F%8AapplicationKey"><span class="toc-number">5.4.2.</span> <span class="toc-text">获取API的keyID及applicationKey</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E7%82%B9%E5%85%B3%E9%94%AE%E4%BF%A1%E6%81%AF"><span class="toc-number">5.5.</span> <span class="toc-text">最后一点关键信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B2%E9%83%A8%E5%88%86%E5%A4%8D%E7%9B%98"><span class="toc-number">5.6.</span> <span class="toc-text">B2部分复盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CF-Cloudflare-%E9%85%8D%E7%BD%AE"><span class="toc-number">6.</span> <span class="toc-text">CF(Cloudflare)配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CNAME%E9%85%8D%E7%BD%AE"><span class="toc-number">6.1.</span> <span class="toc-text">CNAME配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8CF%E7%9A%84%E8%BD%AC%E6%8D%A2%E8%A7%84%E5%88%99%E9%9A%90%E8%97%8Fbucket%E5%90%8D%E7%A7%B0"><span class="toc-number">6.2.</span> <span class="toc-text">使用CF的转换规则隐藏bucket名称</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E5%85%A5%E9%85%8D%E7%BD%AE"><span class="toc-number">6.2.1.</span> <span class="toc-text">传入配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E5%86%99%E9%85%8D%E7%BD%AE"><span class="toc-number">6.2.2.</span> <span class="toc-text">重写配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%87%8D%E5%86%99%E6%98%AF%E5%90%A6%E7%94%9F%E6%95%88"><span class="toc-number">6.3.</span> <span class="toc-text">测试重写是否生效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PicGo%E9%85%8D%E7%BD%AE"><span class="toc-number">7.</span> <span class="toc-text">PicGo配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85PicGo%E5%8F%8APicGo-S3-Plugin"><span class="toc-number">7.1.</span> <span class="toc-text">安装PicGo及PicGo S3 Plugin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AES3%E6%8F%92%E4%BB%B6"><span class="toc-number">7.2.</span> <span class="toc-text">配置S3插件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">8.</span> <span class="toc-text">后记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">9.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://images.ostdb.info/blog/sites/avator_01.jpg"></div><div class="author-info__name text-center">K4W1H0R53</div><div class="author-info__description text-center">一条失去梦想的扫图狗</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">3</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">2</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://images.ostdb.info/blog/sites/background_01.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">冬多鲁玛杂货铺</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right"></span></div><div id="post-info"><div id="post-title">使用PicGo+CF(Cloudflare)+B2(Backblaze)作为博客图床</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-23</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.3k</span><span class="post-meta__separator">|</span><span>Reading time: 4 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我对于B2(Backblaze)的了解一开始并不是云储存业务，<del>而是它家的季度硬盘故障率报告</del></p>
+<p>过程中由于插件部分设置在最后一步卡了一天左右，不过最后还是通过曲线方式想通了。</p>
+<span id="more"></span>
+<hr>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><ul>
+<li><p>没有阻断的网络环境</p>
+</li>
+<li><p>一个付费二级域名</p>
+</li>
+<li><p>Cloudflare账号</p>
+</li>
+<li><p>B2(Backblaze)账号</p>
+</li>
+</ul>
+<hr>
+<h2 id="所需要的轮子"><a href="#所需要的轮子" class="headerlink" title="所需要的轮子"></a>所需要的轮子</h2><p><a target="_blank" rel="noopener" href="https://picgo.github.io/PicGo-Doc/zh/guide/">PicGo</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wayjam/picgo-plugin-s3">picgo-plugin-s3</a></p>
+<hr>
+<h2 id="为什么要用B2-Backblaze"><a href="#为什么要用B2-Backblaze" class="headerlink" title="为什么要用B2(Backblaze)"></a>为什么要用B2(Backblaze)</h2><ul>
+<li><p><strong>低审核风险；</strong></p>
+</li>
+<li><details>
+<summary><strong>足够大的免(bai)费(piao)额度</strong></summary>
+<img src="https://images.ostdb.info/blog/20221123/b2_free_plan.png" alt="" width="200"/>
+</details>
+</li>
+<li><details>
+<summary><strong>即便以后不白嫖，收费也是大型IDC里最低的</strong></summary>
+
+<img src="https://images.ostdb.info/blog/20221123/b2_price.png" alt="" width="200"/>
+</details></li>
+</ul>
+<p>B2已经加入了Cloudflare的带宽联盟，完全可以hold住我这小博客那点流量和访问了。</p>
+<hr>
+<h2 id="B2-Backblaze-配置"><a href="#B2-Backblaze-配置" class="headerlink" title="B2(Backblaze)配置"></a>B2(Backblaze)配置</h2><h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3>  <img src="https://images.ostdb.info/blog/20221123/step01_register.png" alt="" style="zoom:50%;" />
+
+<hr>
+<h3 id="新建bucket"><a href="#新建bucket" class="headerlink" title="新建bucket"></a>新建bucket</h3>  <img src="https://images.ostdb.info/blog/20221123/step02_01.png" alt="" style="zoom:50%;" />
+  <img src="https://images.ostdb.info/blog/20221123/step02_02.png" alt="" style="zoom:50%;" />
+  <img src="https://images.ostdb.info/blog/20221123/step03_01.png" alt="" style="zoom:50%;" />
+
+<p>  这样第一个bucket就建立好啦，记下上Endpoint和Bucket Name：</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bucket Name</td>
+<td>test-ostdb</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td><a target="_blank" rel="noopener" href="https://s3.us-west-004.backblazeb2.com/">https://s3.us-west-004.backblazeb2.com</a></td>
+</tr>
+</tbody></table>
+<p>  <strong>Endpoint地址一定要前面加<code>https://</code>，这将影响后续PicGo插件设置</strong></p>
+<hr>
+<h3 id="设置bucket"><a href="#设置bucket" class="headerlink" title="设置bucket"></a>设置bucket</h3><p>以下均为可选项目，是否配置按个人需求决定，是否配置均不影响b2作为图床本身的上传及使用。</p>
+<h4 id="设置缓存回源时间"><a href="#设置缓存回源时间" class="headerlink" title="设置缓存回源时间"></a>设置缓存回源时间</h4><p>将<code>Bucket Info</code>设为如下值</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bucket Info</td>
+<td><code>&#123;&quot;cache-control&quot;:&quot;max-age=86400&quot;&#125;</code></td>
+</tr>
+</tbody></table>
+<p>意味着86400秒(即24小时)内，CF将不返回该bucket内重新拉取信息，如需让CF更新信息需手动进入CF dashboard清理缓存。</p>
+<img src="https://images.ostdb.info/blog/20221123/step03_02.png" alt="" style="zoom:50%;" />
+
+<hr>
+<h4 id="存活时间设置-Lifecycle-Settings"><a href="#存活时间设置-Lifecycle-Settings" class="headerlink" title="存活时间设置(Lifecycle Settings)"></a>存活时间设置(Lifecycle Settings)</h4><p>将其设置为<code>Keep only the last version of the file</code>，只保留bucket内最新版本的文件。</p>
+<img src="https://images.ostdb.info/blog/20221123/step03_03.png" alt="" style="zoom:50%;" />
+
+<hr>
+<h4 id="跨域规则设置-CORS-Rules"><a href="#跨域规则设置-CORS-Rules" class="headerlink" title="跨域规则设置(CORS Rules)"></a>跨域规则设置(CORS Rules)</h4><p>直接引用CF绑定的域名，作为博客自身图床使用无跨域需求。</p>
+<hr>
+<h3 id="B2-API配置"><a href="#B2-API配置" class="headerlink" title="B2 API配置"></a>B2 API配置</h3><h4 id="新建API密钥"><a href="#新建API密钥" class="headerlink" title="新建API密钥"></a>新建API密钥</h4><img src="https://images.ostdb.info/blog/20221123/step04_01.png" alt="" style="zoom:50%;" />
+
+<img src="https://images.ostdb.info/blog/20221123/step04_02.png" alt="" style="zoom:50%;" />
+
+<hr>
+<h4 id="获取API的keyID及applicationKey"><a href="#获取API的keyID及applicationKey" class="headerlink" title="获取API的keyID及applicationKey"></a>获取API的keyID及applicationKey</h4><p>点击Create New Key后，记下红框中的keyID还有applicationKey记下来：</p>
+<img src="https://images.ostdb.info/blog/20221123/step04_03.png" alt="" style="zoom:50%;" />
+
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>keyID</td>
+<td>004678d60f5a3240000000007</td>
+</tr>
+<tr>
+<td>applicationKey</td>
+<td>K004OLCnqn&#x2F;lzxm9Q9TH6O59zbzY+7o</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="最后一点关键信息"><a href="#最后一点关键信息" class="headerlink" title="最后一点关键信息"></a>最后一点关键信息</h3><ul>
+<li>随便上传点图片到bucket内：<img src="https://images.ostdb.info/blog/20221123/step05_01.png" alt="" style="zoom:50%;" /></li>
+</ul>
+<hr>
+<ul>
+<li><p><del>刹那酱真可爱，</del> 点击打开刚刚上传的图片，记下Friendly URL的值:</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Friendly URL</td>
+<td>https:&#x2F;&#x2F;<em>f004.backblazeb2.com</em>&#x2F;file&#x2F;test-ostdb&#x2F;20190531_Line_stamp_image_2.png</td>
+</tr>
+</tbody></table>
+<img src="https://images.ostdb.info/blog/20221123/step05_02.png" style="zoom:50%;" /></li>
+</ul>
+<hr>
+<h3 id="B2部分复盘"><a href="#B2部分复盘" class="headerlink" title="B2部分复盘"></a>B2部分复盘</h3><p>以上就是B2端所需要的所有设置了，核对下以下内容是否全部记下：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bucket Name</td>
+<td>test-ostdb</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td><a target="_blank" rel="noopener" href="https://s3.us-west-004.backblazeb2.com/">https://s3.us-west-004.backblazeb2.com</a></td>
+</tr>
+<tr>
+<td>keyID</td>
+<td>004678d60f5a3240000000007</td>
+</tr>
+<tr>
+<td>applicationKey</td>
+<td>K004OLCnqn&#x2F;lzxm9Q9TH6O59zbzY+7o</td>
+</tr>
+<tr>
+<td>Friendly URL</td>
+<td><a target="_blank" rel="noopener" href="https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png">https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="CF-Cloudflare-配置"><a href="#CF-Cloudflare-配置" class="headerlink" title="CF(Cloudflare)配置"></a>CF(Cloudflare)配置</h2><h3 id="CNAME配置"><a href="#CNAME配置" class="headerlink" title="CNAME配置"></a>CNAME配置</h3><p>进入CF的DNS设置，新增一条DNS记录，类型为CNAME，名称可自己选择，我这里用了<code>test</code>作为前缀；</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>目标</th>
+<th>代理状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CNAME</td>
+<td>test</td>
+<td>f004.backblazeb2.com</td>
+<td>YES</td>
+</tr>
+</tbody></table>
+<p><strong>目标地址为上面记事本中Friendly URL的主域名地址</strong>，即<code>f004.backblazeb2.com</code>，代理状态务必开启(黄色云朵点亮)，保证域名套上CF的CDN。</p>
+<img src="https://images.ostdb.info/blog/20221123/step06_02.png" style="zoom:50%;" />
+
+<p>记下这个CNAME记录：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>URL</td>
+<td>test.ostdb.info</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="使用CF的转换规则隐藏bucket名称"><a href="#使用CF的转换规则隐藏bucket名称" class="headerlink" title="使用CF的转换规则隐藏bucket名称"></a>使用CF的转换规则隐藏bucket名称</h3><p><strong>随便暴露bucket名称是个非常愚蠢的行为</strong>，当然了，当你看到本文时，这个作为范例暴露出来的bucket已经不复存在了~</p>
+<img src="https://images.ostdb.info/blog/20221123/step06_03.png" style="zoom:50%;" />
+
+<hr>
+<h4 id="传入配置"><a href="#传入配置" class="headerlink" title="传入配置"></a>传入配置</h4><table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>运算符</th>
+<th>值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主机名</td>
+<td>等于</td>
+<td>test.ostdb.info</td>
+<td>值为上一步设置的CNAME记录</td>
+</tr>
+<tr>
+<td>AND</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>URI完整</td>
+<td>不包含</td>
+<td><a target="_blank" rel="noopener" href="https://test.ostdb.info/file/*test-ostdb*/">https://test.ostdb.info/file/*test-ostdb*/</a></td>
+<td><em>test-ostdb</em>为bucket名称</td>
+</tr>
+</tbody></table>
+<hr>
+<h4 id="重写配置"><a href="#重写配置" class="headerlink" title="重写配置"></a>重写配置</h4><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>重写类型</th>
+<th>值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>重写到</td>
+<td>Dynamic</td>
+<td>concat(“&#x2F;file&#x2F;<em>test-ostdb</em>“,http.request.uri.path)</td>
+<td><em>test-ostdb</em>为bucket名称</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="测试重写是否生效"><a href="#测试重写是否生效" class="headerlink" title="测试重写是否生效"></a>测试重写是否生效</h3><p>将Friendly URL中的<code>f004.backblazeb2.com/file/test-ostdb/</code>替换为URL<code>test.ostdb.info</code>后，看是否能正常打开图片</p>
+<table>
+<thead>
+<tr>
+<th>原有值</th>
+<th>替换后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png">https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png</a></td>
+<td><a target="_blank" rel="noopener" href="https://test.ostdb.info/20190531_Line_stamp_image_2.png">https://test.ostdb.info/20190531_Line_stamp_image_2.png</a></td>
+</tr>
+</tbody></table>
+<img src="https://images.ostdb.info/blog/20221123/step07.png" style="zoom:50%;" />
+
+<hr>
+<h2 id="PicGo配置"><a href="#PicGo配置" class="headerlink" title="PicGo配置"></a>PicGo配置</h2><h3 id="安装PicGo及PicGo-S3-Plugin"><a href="#安装PicGo及PicGo-S3-Plugin" class="headerlink" title="安装PicGo及PicGo S3 Plugin"></a>安装PicGo及PicGo S3 Plugin</h3><p>安装过程一路next，略过不表；</p>
+<p>插件在<code>插件设置</code>里搜<code>s3</code>即可，记得本机要安装nodejs环境。</p>
+<p>本文所使用PicGo及插件版本如下：</p>
+<table>
+<thead>
+<tr>
+<th>软件包</th>
+<th>版本号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PicGo</td>
+<td>2.3.1</td>
+</tr>
+<tr>
+<td>PicGo S3 Plugin</td>
+<td>1.2.2</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="配置S3插件"><a href="#配置S3插件" class="headerlink" title="配置S3插件"></a>配置S3插件</h3><p>看下之前记录下的那些值，该让它们派上用场了：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Endpoint</td>
+<td><a target="_blank" rel="noopener" href="https://s3.us-west-004.backblazeb2.com/">https://s3.us-west-004.backblazeb2.com</a></td>
+</tr>
+<tr>
+<td>keyID</td>
+<td>004678d60f5a3240000000007</td>
+</tr>
+<tr>
+<td>applicationKey</td>
+<td>K004OLCnqn&#x2F;lzxm9Q9TH6O59zbzY+7o</td>
+</tr>
+<tr>
+<td>Bucket Name</td>
+<td>test-ostdb</td>
+</tr>
+<tr>
+<td>Friendly URL</td>
+<td><a target="_blank" rel="noopener" href="https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png">https://f004.backblazeb2.com/file/test-ostdb/20190531_Line_stamp_image_2.png</a></td>
+</tr>
+<tr>
+<td>URL</td>
+<td>test.ostdb.info</td>
+</tr>
+</tbody></table>
+<img class="no-fancybox" src="https://images.ostdb.info/blog/20221123/step08.png"/>
+
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+<th>对应项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>应用密钥ID</td>
+<td>004678d60f5a3240000000007</td>
+<td>keyID</td>
+</tr>
+<tr>
+<td>应用密钥</td>
+<td>K004OLCnqn&#x2F;lzxm9Q9TH6O59zbzY+7o</td>
+<td>applicationKey</td>
+</tr>
+<tr>
+<td>桶</td>
+<td>test-ostdb</td>
+<td>Bucket Name</td>
+</tr>
+<tr>
+<td>文件路径</td>
+<td>&#x2F;</td>
+<td>留空或者只填写’&#x2F;‘，则上传图片全部会存放到根目录</td>
+</tr>
+<tr>
+<td>地区</td>
+<td>Null</td>
+<td>可选</td>
+</tr>
+<tr>
+<td>自定义节点</td>
+<td><a target="_blank" rel="noopener" href="https://s3.us-west-004.backblazeb2.com/">https://s3.us-west-004.backblazeb2.com</a></td>
+<td>Endpoint</td>
+</tr>
+<tr>
+<td>自定义域名</td>
+<td><a target="_blank" rel="noopener" href="https://test.ostdb.info/">https://test.ostdb.info</a></td>
+<td>URL</td>
+</tr>
+<tr>
+<td>PathStyleAccess</td>
+<td><strong>YES</strong></td>
+<td><strong>B2使用的是MinIO API，必须勾选该项</strong></td>
+</tr>
+<tr>
+<td>rejectUnauthorized</td>
+<td>NO</td>
+<td>保持默认关闭即可，除非在log里出现证书错误</td>
+</tr>
+<tr>
+<td>bucketEndpoint</td>
+<td><strong>YES</strong></td>
+<td><strong>必须打开，否则无法正确调用自定义节点选项</strong></td>
+</tr>
+</tbody></table>
+<p>之后就是一边写博客，一边把图片往支持额外命令行的编辑器(比如<a target="_blank" rel="noopener" href="https://typora.io/">typora</a>)里拖放或者黏贴就行了。记得在<code>文件路径</code>下设定好上传路径，防止所有文件全部被上传到根目录下产生混乱。</p>
+<hr>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><ul>
+<li><p><strong>PicGo目前只能作为上传客户端连接B2，无法实现管理功能；</strong></p>
+</li>
+<li><p>B2对大陆地区访问依然不友好。</p>
+</li>
+</ul>
+<hr>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://blog.winer.website/archives/use_blackblaze_b2_and_cloudflare_cdn_to_bulid_a_free_oss.html">使用Backblaze B2 + Cloudflare CDN + PicGo实现可自定义域名的10G免费图床解决方案</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lsky-org/lsky-pro/discussions/448">启发</a></p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E8%AE%BE/">博客搭设</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/17783/"><span>漫画扫图从入坑到入土 - 番外篇 - 印刷物&quot;摩尔纹&quot;的产生</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://images.ostdb.info/blog/sites/background_01.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2023 By K4W1H0R53</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
